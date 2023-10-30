@@ -3,9 +3,8 @@ package controllers;
 //新規登録処理（SQLでいうと、INSERT文）を行うコントローラ
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
-import javax.persistence.EntityManager;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Task;
-import utils.DBUtil;
 
 /**
  * Servlet implementation class NewServlet
@@ -36,29 +34,15 @@ public class NewServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub
 
-        //①Task.java(modelクラス、エンティティクラス）をオブジェクト化
-        EntityManager em = DBUtil.createEntityManager();
-        em.getTransaction().begin();
+        //CSRF対策（セキュリティ脅威対策）
+        request.setAttribute("_token", request.getSession().getId());
 
-        //②Task.javaのインスタンスを作成
-        Task t = new Task();
+        //おまじないとして、インスタンスを作成
+        request.setAttribute("task", new Task());
 
-        //③インスタンス t の各フィールドにデータを代入
-        String content = "歯磨き";
-        t.setContent(content);
-
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-        t.setCreated_at(currentTime);
-        t.setUpdated_at(currentTime);
-
-        //④データベースに保存する
-        em.persist(t);
-        em.getTransaction().commit();
-
-        //⑤自動採番されたIDの値を表示する
-        response.getWriter().append(Integer.valueOf(t.getId()).toString());
-
-        em.close();
+        //ビューである /WEB-INF/views/tasks/new.jsp を呼び出す
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/new.jsp");
+        rd.forward(request, response);
     }
 
 }
