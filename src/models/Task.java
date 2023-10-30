@@ -7,11 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 //モデル（DTO）となるクラス
 
 @Entity
+
+//一覧表示するためのデータを取得するJPQL(特殊なSQL文)
+//Entityclass(Task.java)に対して使用する構文のため、指定はテーブル名ではなくエンティティ名。
+@NamedQueries({
+    @NamedQuery(
+            name = "getAllTasks",
+            query = "SELECT m FROM Task AS m ORDER BY m.id DESC"
+            )
+})
+
 @Table(name = "tasks")
 
 public class Task {
