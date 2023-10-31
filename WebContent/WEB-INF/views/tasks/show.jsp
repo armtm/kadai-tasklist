@@ -11,9 +11,24 @@
 
                 <h2>id : ${task.id}のタスク詳細ページ</h2>
 
-                <p>タスクの内容 : <c:out value="${task.content }" /></p>
-                <p>作成日時 : <fmt:formatDate value="${task.created_at}" pattern="yyyy-MM-dd HH:mm:ss" /></p>
-                <p>更新日時 ：<fmt:formatDate value="${task.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" /></p>
+                <table>
+                    <tbody>
+                        <tr>
+
+                            <th>タスクの内容</th>
+                            <td><c:out value="${task.content }" /></p></td>
+
+                        </tr>
+                        <tr>
+                            <th>作成日時
+                            <td><fmt:formatDate value="${task.created_at}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                        </tr>
+                        <tr>
+                            <th>更新日時</th>
+                            <td><fmt:formatDate value="${task.updated_at}" pattern="yyyy-MM-dd HH:mm:ss" /></td>
+                        </tr>
+                    </tbody>
+                </table>
 
                 <p><a href="${pageContext.request.contextPath }/index">一覧に戻る</a></p>
 
@@ -31,6 +46,8 @@
 </c:import>
 
 <%--
- 条件分岐を使用し、該当するIDのタスクデータが無かった場合に
- 「お探しのデータは見つかりませんでした。」 と表示させる。
+ ① 条件分岐を使用し、該当するIDのタスクデータが無かった場合に
+  「お探しのデータは見つかりませんでした。」 と表示させる。
+
+ ② タイトル、タスク、作成日時、変更日時の表示をテーブルでの表示に変更する。
 --%>
