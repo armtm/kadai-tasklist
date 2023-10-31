@@ -47,6 +47,9 @@ public class DestroyServlet extends HttpServlet {
             em.remove(t);
 
             em.getTransaction().commit();
+
+            //フラッシュメッセージをセッションスコープに保存し、index.jsp を呼び出す。
+            request.getSession().setAttribute("flush", "削除が完了しました。");
             em.close();
 
             //セッションスコープ上の不要になったデータを削除する

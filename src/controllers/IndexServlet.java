@@ -53,6 +53,14 @@ public class IndexServlet extends HttpServlet {
         //index.jspを呼び出している
         request.setAttribute("tasks", tasks);
 
+        //フラッシュメッセージは１actionに１回表示とする。
+        //フラッシュメッセージがセッションスコープにセットされている場合
+        //リクエストスコープに保存する（セッションスコープからは削除する）
+        if(request.getSession().getAttribute("flush") != null) {
+            request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            request.getSession().removeAttribute("flush");
+        }
+
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/index.jsp");
         rd.forward(request, response);
     }

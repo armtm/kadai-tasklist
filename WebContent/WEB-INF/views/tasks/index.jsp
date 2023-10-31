@@ -4,6 +4,13 @@
 <c:import url="../layout/app.jsp">
 
     <c:param name="content">
+
+        <c:if test="${flush != null }">
+            <div id="flush_success">
+                <c:out value="${flush }"></c:out>
+            </div>
+        </c:if>
+
         <h2>タスク一覧</h2>
         <ul>
             <c:forEach var="task" items="${tasks}">
@@ -22,6 +29,8 @@
 </c:import>
 
 <%--
- app.jsp の ${param.content}の箇所に、
+ ①app.jsp の ${param.content}の箇所に、
  index.jspの<c:param name="content">～</c:param>の中に記述した内容が挿入されるイメージ
+
+ ②create、update、destroy を行った時に、フラッシュメッセージを表示する。
 --%>
