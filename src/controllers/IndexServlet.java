@@ -40,11 +40,25 @@ public class IndexServlet extends HttpServlet {
         //①Task.java(modelクラス、エンティティクラス）をオブジェクト化
         EntityManager em = DBUtil.createEntityManager();
 
+        //●開くページ数を取得（デフォルトを1ページ目にする）
+        int page = 1;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        }catch(NumberFormatException e) {}
+
         //②createNamedQueryメソッドの引数に、エンティティクラスで命名したgetALLTasksを指定し
         //データベースへ問い合わせる
         //③問い合わせ結果をリスト形式で取得（getResultList() メソッド）
-        List<Task> tasks = em.createNamedQuery("getAllTasks", Task.class).getResultList();
-        response.getWriter().append(Integer.valueOf(tasks.size()).toString());
+        List<Task> tasks = em.createNamedQuery("getAllTasks", Task.class)
+
+        //●最大件数と開始位置を指定してタスクデータを取得
+                              .setFirstResult(15 * (page - 1))
+                              .setMaxResults(15)
+                              .getResultList();
+
+        //●全件数を取得
+        long tasks_count = (long)em.createNamedQuery("getTasksCount", Long.class)
+                                     .getSingleResult();
 
         em.close();
 
@@ -52,6 +66,11 @@ public class IndexServlet extends HttpServlet {
         //データベースから取得したタスク一覧（tasks）を、リクエストスコープにセットし、
         //index.jspを呼び出している
         request.setAttribute("tasks", tasks);
+
+        //●全件数
+        request.setAttribute("tasks_count", tasks_count);
+        //●ページ数
+        request.setAttribute("page", page);
 
         //フラッシュメッセージは１actionに１回表示とする。
         //フラッシュメッセージがセッションスコープにセットされている場合
